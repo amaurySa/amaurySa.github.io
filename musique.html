@@ -1,5 +1,22 @@
-<!DOCTYPE html> 
+<!doctype html>
 <html>
+<head>
+<title>classical game loop</title>
+</style>
+</head>
+<body>
+<canvas id="gameField"></canvas>
+</body>
+<script>
+
+	const canvas = document.getElementById("gameField");
+	canvas.width = 600;
+	canvas.height = 600;
+	const context = canvas.getContext("2d");
+
+	let wallClock = 0;
+
+	
 	<main>
       <style type="text/css">
 			#navlist{position:relative;}
