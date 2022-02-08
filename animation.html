@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+<head>
+<title>classical game loop</title>
+<style>
+	canvas {
+            background-color: pink;
+        }
+</style>
+</head>
+<body>
+<canvas id="gameField"></canvas>
+</body>
+<script>
+
+
+		//requestAnimationFrame method conveniently replace Setinterval for all animation purpose. It is optimized for 30frame per seconds rendering.
+    const animFrame = window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            window.oRequestAnimationFrame      ||
+            window.msRequestAnimationFrame     ||
+            null ;
+
+	const canvas = document.getElementById("gameField");
+	canvas.width = 600;
+	canvas.height = 600;
+	const context = canvas.getContext("2d");
+
+	let wallClock = 0;
+	
+	const bombWidth= 1000;
+	const bombHeight= 100;	
+	const bombNumberOfFrame=7;
+	const bombImage = new Image();	
+	bombImage.src = "images/bomb_1.png";
+	
+	const rectWidth= 70;
+	const rectHeight= 70;
+	const rectImage = new Image();
+	rectImage.src = "images/bomb_7.png";
+	
+
+	class Bomb {
+		constructor(context,image,width, height,x,y,speed, numberOfFrames, delay){
+			this.context=context;
+			this.image=image;
+			this.width=width;
+			this.height=height;
+			this.x=x;
+			this.y=y;
+			this.speed=speed;
+			this.numberOfFrames=numberOfFrames;
+			this.frameIndex=0;
+			this.delay=delay;
+			this.hasStarted=false;
+		}
+
+		clear(){
+			this.context.clearRect(this.x, this.y, this.width, this.height);
+		}
+
+		update(){
+			if((this.hasStarted == false) && (this.delay<wallClock)){
+				console.log("starting");
+				this.hasStarted=true;
+			}
+
+
+			if( (this.hasStarted == true) && (wallClock%this.speed == 0)){
+				if (this.frameIndex < this.numberOfFrames - 1) {	
+					this.frameIndex += 1;
+				}else {
+					this.frameIndex = 0;
+				}
+        	}
+		}
+
+		draw(){
+			this.context.drawImage(
+		    	this.image,
+		    	this.frameIndex * this.width / this.numberOfFrames,
+		    	0,
+		    	this.width / this.numberOfFrames,
+		    	this.height,
+		    	this.x,
+		    	this.y,
+		    	this.width / this.numberOfFrames,
+		    	this.height
+		    	);
+		}
+
+
+	}
+	
+	class Rectangle {
+    	constructor(context,image,width,height,x,y){
+			this.context=context;
+			this.image=image;
+			this.width=width;
+			this.height=height;
+			this.x=x;
+			this.y=y;
+			this.hasStarted=false;
+		}
+		
+		clear(){
+			this.context.clearRect(this.x, this.y, this.width, this.height);
+		}
+
+		update(){
+			if((this.hasStarted == false)){
+				console.log("starting");
+				this.hasStarted=true;
+			}
+
+
+			if( (this.hasStarted == true)){
+				if (this.x < 530) {	
+					this.x += 30;
+				}else {
+					this.x = 0;
+					if(this.y < 530) {
+						this.y += 30;
+					}else {
+						this.y = 0;
+					}
+				}
+        	}
+		}
+		
+		draw(){
+			this.context.drawImage(
+		    	this.image,
+		    	this.x,
+		    	this.y,
+		    	this.width,
+		    	this.height
+		    	);
+		}
+	}
+
+
+	const objectsInGame = new Array();
+
+    const bomb1 = new Bomb(context,bombImage,bombWidth, bombHeight,100,100,2, bombNumberOfFrame,0);
+   	const bomb2 = new Bomb(context,bombImage,bombWidth, bombHeight,200,100,4, bombNumberOfFrame,100);
+   	const bomb3 = new Bomb(context,bombImage,bombWidth, bombHeight,100,200,6, bombNumberOfFrame,200);
+   	const rect = new Rectangle(context, rectImage, rectWidth, rectHeight, 0,0);
+
+   	objectsInGame.push(bomb1);
+   	objectsInGame.push(bomb2);
+   	objectsInGame.push(bomb3);
+   	objectsInGame.push(rect);
+
+
+
+
+	function clearGame(){
+			objectsInGame.forEach(element => element.clear());
+	}
+
+
+	function updateGame(){
+		wallClock += 1;
+		objectsInGame.forEach(element => element.update());
+	}
+	
+
+	function drawGame(){
+		objectsInGame.forEach(element => element.draw());
+	}
+	
+	
+	 function mainloop(){
+	 	clearGame();
+        updateGame();
+        drawGame();
+        
+        animFrame( mainloop );
+    };
+		
+		
+    
+   
+
+    // start the mainloop
+
+    animFrame( mainloop );
+</script>
+</html>
