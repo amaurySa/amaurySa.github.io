@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Target practice</title>
+<style>
+	canvas {
+            background-color: pink;
+        }
+</style>
+</head>
+<body>
+<canvas id="field"></canvas>
+</body>
+<script>
+
+    const animFrame = window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            window.oRequestAnimationFrame      ||
+            window.msRequestAnimationFrame     ||
+            null ;
+
+	const canvas = document.getElementById("field");
+	canvas.width = 1000;
+	canvas.height = 1000;
+	const context = canvas.getContext("2d");
+	
+	class Worker {
+		constructor(context, couleur){
+		this.context = context;
+		this.x = 0;
+		this.y = 0;
+		this.width = 10;
+		this.height = 10;
+			this.couleur = couleur;
+		}
+		
+		newPos(){
+			this.x = Math.random()*1000;
+			this.y = Math.random()*1000;
+		}
+		
+		clear(){
+			this.context.clearRect(this.x, this.y, this.width, this.height);
+		}
+
+		draw(){
+			context.fillStyle=this.couleur;
+			context.fillRect(this.x, this.y, this.width, this.height)
+		}
+		
+		onmessage = function() {
+		  this.newPos();
+		  this.clear();
+		  this.draw();
+		}
+	}	
+	
+	var W1 = new Worker(context, "red");
+	var W2 = new Worker(context, "black");
+	var W3 = new Worker(context, "blue");
+	var W4 = new Worker(context, "yellow");
+	var W5 = new Worker(context, "orange");
+	var W6 = new Worker(context, "green");
+	var W7 = new Worker(context, "cyan");
+	var W8 = new Worker(context, "DeepPink");
+	var W9 = new Worker(context, "DarkViolet");
+	var W10 = new Worker(context, "purple");
+	
+	const points = new Array();
+	
+	points.push(W1);
+	points.push(W2);
+	points.push(W3);
+	points.push(W4);
+	points.push(W5);
+	points.push(W6);
+	points.push(W7);
+	points.push(W8);
+	points.push(W9);
+	points.push(W10);
+	
+	
+	function update(){
+		points.forEach(element => element.postMessage(null));
+	}
+	
+	update();
+	
+	button.onclick = function() {
+	  update();
+	}
+	
+</script>
+</html>
+	
