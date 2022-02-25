@@ -56,40 +56,44 @@
 		}
 	}	
 	
-	var W1 = new Worker(context, "red");
-	var W2 = new Worker(context, "black");
-	var W3 = new Worker(context, "blue");
-	var W4 = new Worker(context, "yellow");
-	var W5 = new Worker(context, "orange");
-	var W6 = new Worker(context, "green");
-	var W7 = new Worker(context, "cyan");
-	var W8 = new Worker(context, "DeepPink");
-	var W9 = new Worker(context, "DarkViolet");
-	var W10 = new Worker(context, "purple");
-	
-	const points = new Array();
-	
-	points.push(W1);
-	points.push(W2);
-	points.push(W3);
-	points.push(W4);
-	points.push(W5);
-	points.push(W6);
-	points.push(W7);
-	points.push(W8);
-	points.push(W9);
-	points.push(W10);
-	
-	
-	function update(){
-		points.forEach(element => element.Worker.postMessage(null));
-	}
-	
-	update();
-	
-	button.onclick = function() {
-	  update();
-	}
+	if(window.Worker) {
+		var W1 = new Worker('worker.js', "red");
+		var W2 = new Worker('worker.js', "black");
+		var W3 = new Worker('worker.js', "blue");
+		var W4 = new Worker('worker.js', "yellow");
+		var W5 = new Worker('worker.js', "orange");
+		var W6 = new Worker('worker.js', "green");
+		var W7 = new Worker('worker.js', "cyan");
+		var W8 = new Worker('worker.js', "DeepPink");
+		var W9 = new Worker('worker.js', "DarkViolet");
+		var W10 = new Worker('worker.js', "purple");
+		
+		const points = new Array();
+		
+		points.push(W1);
+		points.push(W2);
+		points.push(W3);
+		points.push(W4);
+		points.push(W5);
+		points.push(W6);
+		points.push(W7);
+		points.push(W8);
+		points.push(W9);
+		points.push(W10);
+		
+		
+		function update(){
+			points.forEach(element => element.Worker.postMessage(null));
+		}
+		
+		update();
+		
+		button.onclick = function() {
+		  update();
+		}
+	} else {
+	  console.log('Your browser doesn\'t support web workers.');
+	}	
 	
 </script>
 </html>
