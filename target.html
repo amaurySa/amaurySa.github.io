@@ -25,19 +25,18 @@
 	canvas.height = 1000;
 	const context = canvas.getContext("2d");
 	
-	class Worker {
-		constructor(context, couleur){
-		this.context = context;
-		this.x = 0;
-		this.y = 0;
-		this.width = 10;
-		this.height = 10;
+	class target {
+		constructor(couleur){
+			this.x = 0;
+			this.y = 0;
+			this.width = 10;
+			this.height = 10;
 			this.couleur = couleur;
 		}
 		
-		newPos(){
-			this.x = Math.random()*1000;
-			this.y = Math.random()*1000;
+		newPos(x,y){
+			this.x = x
+			this.y = y
 		}
 		
 		clear(){
@@ -49,24 +48,26 @@
 			context.fillRect(this.x, this.y, this.width, this.height)
 		}
 		
-		onmessage = function() {
-		  this.newPos();
+		update(x,y) {
+		  this.newPos(x,y);
 		  this.clear();
 		  this.draw();
 		}
 	}	
 	
 	if(window.Worker) {
-		var W1 = new Worker('worker.js', "red");
-		var W2 = new Worker('worker.js', "black");
-		var W3 = new Worker('worker.js', "blue");
-		var W4 = new Worker('worker.js', "yellow");
-		var W5 = new Worker('worker.js', "orange");
-		var W6 = new Worker('worker.js', "green");
-		var W7 = new Worker('worker.js', "cyan");
-		var W8 = new Worker('worker.js', "DeepPink");
-		var W9 = new Worker('worker.js', "DarkViolet");
-		var W10 = new Worker('worker.js', "purple");
+		var myWorker = new Worker('worker.js');
+		
+		var T1 = new Target("red")
+		var T2 = new Target("black");
+		var T3 = new Target("blue");
+		var T4 = new Target("yellow");
+		var T5 = new Target("orange");
+		var T6 = new Target("green");
+		var T7 = new Target("cyan");
+		var T8 = new Target("DeepPink");
+		var T9 = new Target("DarkViolet");
+		var T10 = new Target("purple");
 		
 		const points = new Array();
 		
@@ -81,15 +82,17 @@
 		points.push(W9);
 		points.push(W10);
 		
+		var i = 0;
 		
-		function update(){
-			points.forEach(element => element.Worker.postMessage(null));
+		myWorker.postMessage(null);
+		
+		myWorker.onmessage = function(x,y){
+			points[i].update(x,y);
+			i++;
 		}
 		
-		update();
-		
 		button.onclick = function() {
-		  update();
+			myWorker.postMessage(null);
 		}
 	} else {
 	  console.log('Your browser doesn\'t support web workers.');
