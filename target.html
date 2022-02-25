@@ -82,7 +82,7 @@
 	
 	
 	function update(){
-		points.forEach(element => element.postMessage(null));
+		points.forEach(element => element.Worker.postMessage(null));
 	}
 	
 	update();
